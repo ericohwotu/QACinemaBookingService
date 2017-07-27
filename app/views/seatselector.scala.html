@@ -1,0 +1,12 @@
+@(content: String)
+<script src='@routes.Assets.at("scripts/seats.js")'></script>
+<div class="row" id="image-row">
+  <div class="thin-divider col-xs-1"></div>
+  <div class="col-xs-11 track-list">
+    <p>SELECT SEATS</p>
+    <div class="underline mid"></div>
+    <div id="seat-area">
+    @Html(content)
+    </div>
+  </div>
+</div>

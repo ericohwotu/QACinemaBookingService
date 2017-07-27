@@ -1,0 +1,59 @@
+@(title: String)(dateForm: Form[DateSelector], content: String)(implicit messages: Messages)
+<!--(dateForm: Form[DateSelectorForm])(implicit messages: Messages)-->
+
+<!DOCTYPE html>
+<html>
+
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href='@routes.Assets.at("styles/bootstrap.min.css")'>
+            <!-- custom scripts and stylesheets -->
+        <link rel="stylesheet" href='@routes.Assets.at("styles/index.css")'>
+        <script src='@routes.Assets.at("scripts/index.js")'></script>
+        <title>@title</title>
+    </head>
+
+    <body style="background-color:black">
+            <!-- Navigation Bar -->
+        <div class="navbar navbar-inverse">
+            <div class="container-fluid">
+                <div class="navbar-header">
+                    <a class="navbar-brand" href="#">@title</a>
+                </div>
+            </div>
+        </div>
+
+            <!-- container for main content -->
+        <div class="container" id="album-info">
+            <br/>
+            <div class="row" id="overlord">
+                <div class="left-fragment col-md-5">
+                    <div class="row" id="date-selection">
+                    @timeselector(dateForm)
+                    </div>
+
+                        <!-- ticket selection -->
+                    <div class="row hor-divider"></div>
+                    <div class="row" id="ticket-selection">
+                    @tickettype()
+                    </div>
+
+                    <div class="row hor-divider"></div>
+                    <div class="row" id="total-section">
+                    @totalcalculator()
+                    </div>
+                </div>
+
+                    <!-- seat selection -->
+                <div class="right-fragment col-md-7">
+                        <!--<div class="row hor-divider"></div>-->
+                    @seatselector(content)
+                </div>
+            </div>
+        </div>
+        <br>
+
+    </body>
+
+</html>

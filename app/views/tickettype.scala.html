@@ -1,0 +1,31 @@
+@()
+<div class="col-xs-12 track-list fill">
+  <p>SELECT TICKETS
+<p>
+  <div class="underline mid"></div>
+  <br>
+  <table id="types" class="table" disabled>
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Adults</th>
+        <th>Students</th>
+        <th>Children</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Standard</td>
+        <td><input id="standard-adult" min="0" class="form-control tally disabled" type="number" placeholder="0" disabled onchange="getTotal()"></td>
+        <td><input id="standard-student" min="0" class="form-control tally disabled" type="number" placeholder="0" disabled onchange="getTotal()"></td>
+        <td><input id="standard-child" min="0" class="form-control tally disabled" type="number" placeholder="0" disabled onchange="getTotal()"></td>
+      </tr>
+      <tr>
+        <td>VIP</td>
+        <td><input id="vip-adult" min="0" class="form-control tally disabled" type="number" placeholder="0" disabled onchange="getTotal()"></td>
+        <td><input id="vip-student" min="0" class="form-control tally disabled" type="number" placeholder="0" disabled onchange="getTotal()"></td>
+        <td><input id="vip-child" min="0" class="form-control tally disabled" type="number" placeholder="0" disabled onchange="getTotal()"></td>
+      </tr>
+    </tbody>
+  </table>
+</div>

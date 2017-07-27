@@ -1,0 +1,22 @@
+@(dsForm: Form[DateSelector])(implicit messages: Messages)
+
+<div class="col-xs-12 track-list fill">
+  <p>SELECT TIME
+<p>
+  <div class="underline mid"></div>
+  <br>
+  <form id="timeSelection" class="form-inline">
+    <select id="days" class="form-control" onchange="popTimes(this.selectedIndex)">
+        <!-- the days go here -->
+    </select>
+    <select disabled id="times" class="form-control disabled" onchange="enableScreens()">
+        <!-- the times go here -->
+    </select>
+    <select disabled id="screens" class="form-control disabled" onchange="enableTable()">
+      <option value="1">Imax</option>
+      <option value="2">3D</option>
+      <option value="3">4D</option>
+      <option value="4">Standard</option>
+    </select>
+  </form>
+</div>

@@ -1,0 +1,156 @@
+
+
+html, body{
+    position: relative;
+    display: block;
+    background-color: #ffffff !important;
+    height: 100% !important;
+    width: 100%;
+}
+
+.album-overview{
+    margin: auto;
+    height:500px;
+    background-color: rgba(0,0,0,0.9);
+    border-radius: 1px;
+    padding-top: 15px;
+}
+
+.right-fragment{
+    display: block;
+    height:100%;
+    width: 100%;
+}
+
+.thin-divider{
+    width:10px !important;
+    height:10px;
+}
+.vert-divider{
+    width: 10px;
+}
+
+.album-art{
+    margin: auto;
+    height:300px;
+    width:80%;
+    background-color: rgba(0,0,0,0.6);
+    border-radius: 5px;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+.track-list{
+    text-align: center;
+    margin: auto;
+    color: white;
+    background-color: #333333;
+    border-radius: 1px;
+    padding:20px;
+}
+
+.fill{
+    width: 100% !important;
+}
+
+.right-fragment,.left-fragment{
+    overflow-x: auto;
+}
+
+.underline{
+    border-bottom-style: solid;
+    border-color: #ffffff;
+}
+
+.thick{
+    border-width: 4px;
+}
+
+.mid{
+    border-width: 2px;
+}
+
+.hor-divider{
+    height:5px;
+}
+
+.thin{
+    border-width: 1px;
+}
+
+.disabled{
+    background-color: #777777 !important;
+}
+
+.form-inline{
+    width: 350px;
+    margin-left: auto !important;
+    margin-right: auto !important;
+}
+
+.form-control{
+    border-radius: 1px !important;
+    background-color: #57D6C7;
+    color: white;
+}
+.navbar{
+    background-color: rgba(45,45,45,0.8);
+}
+
+.fsSubmitButton
+{
+    padding: 6px 12px !important;
+    font-size: 8px !important;
+    font-weight: bold;
+
+    color: #ffffff;
+    border-radius: 5px;
+    -moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
+
+
+    width: 100%;
+    box-shadow: 0 1px 0 rgba(255, 255, 255, 0.5) inset;
+    -moz-box-shadow: 0 1px 0 rgba(255, 255, 255, 0.5) inset;
+    -webkit-box-shadow: 0 1px 0 rgba(255, 255, 255, 0.5) inset;
+}
+
+.booked{
+    background-color: green;
+    text-shadow: 1px 1px green;
+    border: 1px solid green;
+    cursor: pointer;
+}
+.available{
+    background-color: #57D6C7;
+    text-shadow: 1px 1px #57D6C7;
+    border: 1px solid #57D6C7;
+    cursor: pointer;
+}
+.unavailable{
+    background-color: darkgray;
+    text-shadow: 1px 1px darkgray;
+    border: 1px solid darkgray;
+}
+#seat-area{
+    overflow-x: auto;
+    overflow-y: auto;
+    margin: auto;
+    color: #CCCCCC;
+}
+
+#date-area{
+    overflow-x: auto;
+    overflow-y: auto;
+    margin: auto;
+    color: #CCCCCC;
+}
+
+thead > tr,
+tbody > tr{
+    border-style: hidden !important;
+}
+
+thead > tr{
+    text-align:center !important;
+}
