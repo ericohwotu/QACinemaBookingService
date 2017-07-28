@@ -29,7 +29,7 @@ function book(e){
             changeSeatColor(e.target, JSON.parse(this.response));
         }
     };
-    xhttp.open("POST", "http://" + host + ":9000/seats/json/id="+seatId , true);
+    xhttp.open("POST", "http://" + host + ":9000/seats/json?id="+seatId , true);
     xhttp.send();
 }
 

@@ -15,6 +15,9 @@ import play.api.libs.json.Json
 
 class Application @Inject()(implicit val messagesApi: MessagesApi) extends Controller with I18nSupport{
 
+  val homePage = (name: String,request: Request[AnyContent]) =>
+    Ok(views.html.index(name)(DateSelector.dsForm, SeatGenerator.getLayout(request.remoteAddress)))
+
   val seatsForm = Form[(Int, Int)](
     Forms.tuple(
       "bookingid" -> Forms.of[Int],
@@ -23,15 +26,16 @@ class Application @Inject()(implicit val messagesApi: MessagesApi) extends Contr
   )
 
   def index(name: String) = Action { request: Request[AnyContent] =>
-    Ok(views.html.index(name)(DateSelector.dsForm, SeatGenerator.getLayout(request.remoteAddress))).withSession(
-      "sessionKey" -> SessionHelper.getSessionKey()
-    )
+    request.session.get("sessionKey").getOrElse("") match {
+      case "" => homePage(name,request).withSession("sessionKey" -> SessionHelper.getSessionKey(),"movieName"->name)
+      case _ =>  homePage(name,request).withSession("movieName"->name)
+    }
   }
 
   def postIndex = Action(parse.form(seatsForm)) { implicit request =>
     SeatGenerator.seatHistory += request.body._2
-    SeatGenerator.accessHistory += request.remoteAddress
-    Ok(views.html.index("Booking")(DateSelector.dsForm, SeatGenerator.getLayout(request.remoteAddress)) )
+    SeatGenerator.sessionKeys += request.session.get("sessionKey").get
+    Ok(views.html.index("Booking")(DateSelector.dsForm, SeatGenerator.getLayout(request.remoteAddress)))
   }
 
 

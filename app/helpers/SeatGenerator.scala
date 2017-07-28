@@ -14,7 +14,6 @@ object SeatGenerator {
 
 
   var seatHistory: ListBuffer[Int] = new ListBuffer()
-  var accessHistory: ListBuffer[String] = new ListBuffer()
   var sessionKeys: ListBuffer[String] = new ListBuffer()
 
 
@@ -32,7 +31,7 @@ object SeatGenerator {
         if (seatHistory.contains(currentSeat)) {
           btnClass = "booked"
           val index = seatHistory.indexOf(currentSeat)
-          if (!accessHistory(index).equals(currentAccess)) {
+          if (!sessionKeys(index).equals(currentAccess)) {
             enabled = "disabled"
             btnClass = "unavailable"
           }
@@ -62,7 +61,6 @@ object SeatGenerator {
   }
 
   // json actions
-
   def isSeatAvailable(seat: Long): String ={
     "{\"available\": \"" + seatHistory.contains(seat) + " \"}"
   }
@@ -74,7 +72,7 @@ object SeatGenerator {
       case _ =>
         val posForAccess = seatHistory.indexOf(position)
 
-        val bookedBy = (x: Int) => if(x>=0) (accessHistory(x)==client).toString else "false"
+        val bookedBy = (x: Int) => if(x>=0) (sessionKeys(x)==client).toString else "false"
 
         val newStr = "{\"seatid\":" + position + "," +
           "\"available\": \"" + !seatHistory.contains(position) + "\", " +
@@ -87,13 +85,13 @@ object SeatGenerator {
   }
 
   def bookSeats(id: Int, client: String): String = seatHistory.contains(id) match{
-    case true if accessHistory(seatHistory.indexOf(id))==client=>
+    case true if sessionKeys(seatHistory.indexOf(id))==client=>
       seatHistory -= id
-      accessHistory -= client
+      sessionKeys -= client
       "{\"outcome\": \"success\",\"message\": \"seat unbooked\"}"
     case false =>
       seatHistory += id
-      accessHistory += client
+      sessionKeys += client
       "{\"outcome\": \"success\",\"message\": \"seat booked\"}"
     case _ =>
       "{\"outcome\": \"failure\",\"message\": \"Seat already booked by someone else\"}"
