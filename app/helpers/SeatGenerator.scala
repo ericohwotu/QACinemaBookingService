@@ -68,7 +68,7 @@ object SeatGenerator {
 
   def getSeats(client: String): String ={
 
-    def getHelper(position: Long)(result: String): String= position match{
+    def getSeatsHelper(position: Long)(result: String): String= position match{
       case 0 => result.dropRight(1) + "]"
       case _ =>
         val posForAccess = seatHistory.indexOf(position)
@@ -79,10 +79,10 @@ object SeatGenerator {
           "\"available\": \"" + !seatHistory.contains(position) + "\", " +
           "\"bookedBy\": \""+ bookedBy(posForAccess) +"\"},"
 
-        getHelper(position-1)(result+newStr)
+        getSeatsHelper(position-1)(result+newStr)
     }
 
-    getHelper(200)("[")
+    getSeatsHelper(200)("[")
   }
 
   def bookSeats(id: Int, client: String): String = seatHistory.contains(id) match{

@@ -4,12 +4,11 @@
 
 # Home page
 GET     /                           controllers.Application.index(name: String ?= "Sample Booking")
-GET      /seats/json                controllers.Application.getAllSeats
+GET     /seats/json                 controllers.JsonApiController.getAllSeats
 
 # seats selection handler
 POST    /index.html/post            controllers.Application.postIndex
-POST    /seats/json/id=:id          controllers.Application.bookSeat(id: Int)
-
+POST    /seats/json/id=:id          controllers.JsonApiController.bookSeat(id: Int)
 
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.at(path="/public", file)

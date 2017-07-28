@@ -4,6 +4,8 @@ version := "1.0"
       
 lazy val `qacinemabookingservice` = (project in file(".")).enablePlugins(PlayScala)
 
+resolvers += "Sonatype Snapshots" at "https://oss.sonatype.org/content/repositories/snapshots/"
+
 resolvers += "scalaz-bintray" at "https://dl.bintray.com/scalaz/releases"
       
 scalaVersion := "2.11.11"

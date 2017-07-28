@@ -31,13 +31,7 @@ class Application @Inject()(implicit val messagesApi: MessagesApi) extends Contr
     Ok(views.html.index("Booking")(DateSelector.dsForm, SeatGenerator.getLayout(request.remoteAddress)) )
   }
 
-  def getAllSeats = Action { implicit request: Request[AnyContent] =>
-    Ok(Json.parse(SeatGenerator.getSeats(request.remoteAddress)))
-  }
 
-  def bookSeat(id: Int) = Action { implicit request: Request[AnyContent] =>
-    Ok(Json.parse(SeatGenerator.bookSeats(id, request.remoteAddress)))
-  }
 
 
 }
