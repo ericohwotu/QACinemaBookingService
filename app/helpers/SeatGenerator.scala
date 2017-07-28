@@ -49,9 +49,8 @@ object SeatGenerator {
   }
 
   private def addButton(seatNo: Int, cls: String, en: String): String = {
-    "<td>"+
-      "<input onclick=selectSeat(" + seatNo + ") class=\"fsSubmitButton unavailable\" disabled   id=\"seat-" + seatNo + "\">" +
-      "</td>"
+    "<td><input onclick=selectSeat(" + seatNo + ") " +
+      "class=\"fsSubmitButton unavailable\" disabled  id=\"seat-" + seatNo + "\"></td>"
   }
 
   // json actions
