@@ -2,6 +2,7 @@ package controllers
 
 import javax.inject.Inject
 
+import business.SeatGenerator.seatHistory
 import helpers.SessionHelper
 import play.api.mvc._
 import play.modules.reactivemongo.{MongoController, ReactiveMongoApi, ReactiveMongoComponents}
@@ -77,5 +78,34 @@ class MongoDbController @Inject()(val reactiveMongoApi: ReactiveMongoApi) extend
       case x if x.isEmpty => false
       case x => true
     }
+  }
+
+  def getSeats(key: String): String = {
+    val cursor: Future[Cursor[Seat]] = seatsCol.map {
+      _.find(Json.obj()).sort(Json.obj("id" -> -1))
+        .cursor[Seat](ReadPreference.primary)
+    }
+
+    val futureSeats: Future[List[Seat]] = cursor.flatMap(_.collect[List]())
+
+    val seats = Await.result(futureSeats, Duration.Inf)
+
+    getJsonString(seats, key)
+  }
+
+  def getJsonString(seats: List[Seat], key: String): String = {
+
+    def getJsonHelper(tempSeats: List[Seat])(jsonString: String): String = tempSeats.length match {
+      case 0 => jsonString.dropRight(1) + "]"
+      case _ =>
+        val bookedBy = tempSeats.head.author==key
+        val newStr = "{\"seatid\":" + tempSeats.head.id + "," +
+          "\"available\": \"false\", " +
+          "\"bookedBy\": \""+ bookedBy +"\"},"
+        getJsonHelper(tempSeats.tail)(jsonString + newStr)
+    }
+
+    getJsonHelper(seats)("[")
+
   }
 }

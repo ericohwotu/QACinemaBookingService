@@ -75,8 +75,9 @@ object SeatGenerator {
         val bookedBy = (x: Int) => if(x>=0) (sessionKeys(x)==client).toString else "false"
 
         val newStr = "{\"seatid\":" + position + "," +
-          "\"available\": \"" + !seatHistory.contains(position) + "\", " +
+          "\"available\": \"false\", " +
           "\"bookedBy\": \""+ bookedBy(posForAccess) +"\"},"
+
 
         getSeatsHelper(position-1)(result+newStr)
     }
