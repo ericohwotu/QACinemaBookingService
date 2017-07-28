@@ -50,13 +50,7 @@ object SeatGenerator {
 
   private def addButton(seatNo: Int, cls: String, en: String): String = {
     "<td>"+
-      "<form style=\"display: inline;\" action="+
-      "post " +
-      "method=POST>"+
-      "<input type=hidden style=\"display: none !important;\" size=20 name=bookingid value=" + seatNo + ">" +
-      "<input type=hidden style=\"display: none !important;\" size=20 name=seatid value=" + seatNo + ">" +
-      "<input type=submit class=\"fsSubmitButton " + cls + " \"" +  en + " \" value=\"\"  id=\"seat-" + seatNo + "\">" +
-      "</form>"+
+      "<input onclick=selectSeat(" + seatNo + ") class=\"fsSubmitButton unavailable\" disabled   id=\"seat-" + seatNo + "\">" +
       "</td>"
   }
 

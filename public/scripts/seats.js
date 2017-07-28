@@ -3,30 +3,23 @@ let host = "";
 window.onload = function(){
     host = window.location.hostname
     popDates();
-    let seats = document.getElementsByClassName("fsSubmitButton");
-
-    for(let i=0; i< seats.length; i++){
-        seats[i].onclick = function(e){
-            book(e)
-        }
-    }
-
     setInterval(refresh, 5000);
 }
 
 
-function book(e){
+function selectSeat(seatId){
     //prevent submission of form
-    e.preventDefault();
-    console.log(e.target.id.replace("seat-",""));
-    console.log(e.target.parentElement)
 
-    let seatId = e.target.id.replace("seat-","");
+    // console.log(e.target.id.replace("seat-",""));
+    // console.log(e.target.parentElement)
+    //
+    // let seatId = e.target.id.replace("seat-","");
+
     //get an ajax call to book the seat
     let xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = function() {
         if (this.readyState == 4 && this.status == 200) {
-            changeSeatColor(e.target, JSON.parse(this.response));
+            changeSeatColor(document.getElementById("seat-" + seatId), JSON.parse(this.response));
         }
     };
     xhttp.open("POST", "http://" + host + ":9000/seats/json?id="+seatId , true);
@@ -34,6 +27,7 @@ function book(e){
 }
 
 function changeSeatColor(elem, json){
+    console.log(elem)
     elem.classList.remove("available");
     elem.classList.remove("booked");
 
@@ -76,7 +70,33 @@ function updateButton(json){
         elem.classList.add("available");
     else if(json.available === "false" && json.bookedBy === "true")
         elem.classList.add("booked");
-    else
+    else {
         elem.classList.add("unavailable");
+        elem.setAttribute("disabled","true");
+    }
+}
+
+function enableSeats(){
+    let elems = document.getElementsByClassName("fsSubmitButton");
+
+    for(let i =0;i<elems.length;i++){
+        elems[i].removeAttribute("disabled");
+        elems[i].classList.remove("unavailable");
+        elems[i].classList.add("available");
+    }
+
+    refresh();
+}
+
+function disableSeats(){
+    let elems = document.getElementsByClassName("fsSubmitButton");
+
+    for(let i =0;i<elems.length;i++){
+        elems[i].setAttribute("disabled","true");
+        elems[i].classList.remove("available");
+        elems[i].classList.add("unavailable");
+    }
+
+    refresh();
 }
 

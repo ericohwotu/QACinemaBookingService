@@ -17,7 +17,7 @@ class JsonApiController @Inject()(val mongoDbController: MongoDbController) exte
   def getAllSeats(key: Option[String]) = Action { implicit request: Request[AnyContent] =>
     jsonApiHelper(key, request) match {
       case "Unauthorised" => Unauthorized("Sorry you are not authorised")
-      case bookingKey => Ok(Json.parse(SeatGenerator.getSeats(bookingKey)))
+      case bookingKey => Ok(Json.parse(mongoDbController.getSeats(bookingKey)))
     }
   }
 

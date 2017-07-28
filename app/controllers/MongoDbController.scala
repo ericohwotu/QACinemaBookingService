@@ -106,6 +106,5 @@ class MongoDbController @Inject()(val reactiveMongoApi: ReactiveMongoApi) extend
     }
 
     getJsonHelper(seats)("[")
-
   }
 }

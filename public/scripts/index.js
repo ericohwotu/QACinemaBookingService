@@ -92,5 +92,10 @@ function getTotal(){
     let sStudent = document.getElementById("standard-student").value * 6;
     let sChild = document.getElementById("standard-child").value * 3;
 
+    let total = vAdult + vStudent + vChild + sAdult + sChild + sStudent;
+
     document.getElementById("total-field").value = vAdult + vStudent + vChild + sAdult + sChild + sStudent;
+
+    if(total>0)enableSeats()
+    else disableSeats()
 }
