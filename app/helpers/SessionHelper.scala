@@ -2,8 +2,8 @@ package helpers
 
 import javax.inject.Singleton
 
-@Singleton
-class SessionHelper {
+
+object SessionHelper {
 
   private val spectrum = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz123456789"
 

@@ -7,6 +7,7 @@ import javax.inject._
 import play.api.data.format.Formats._
 import play.api.i18n._
 import business.SeatGenerator
+import helpers.SessionHelper
 import models.DateSelector
 import play.api.data.{Form, Forms}
 import play.api.data.Forms._
@@ -22,7 +23,9 @@ class Application @Inject()(implicit val messagesApi: MessagesApi) extends Contr
   )
 
   def index(name: String) = Action { request: Request[AnyContent] =>
-    Ok(views.html.index(name)(DateSelector.dsForm, SeatGenerator.getLayout(request.remoteAddress)))
+    Ok(views.html.index(name)(DateSelector.dsForm, SeatGenerator.getLayout(request.remoteAddress))).withSession(
+      "sessionKey" -> SessionHelper.getSessionKey()
+    )
   }
 
   def postIndex = Action(parse.form(seatsForm)) { implicit request =>

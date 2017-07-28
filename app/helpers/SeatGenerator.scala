@@ -15,6 +15,7 @@ object SeatGenerator {
 
   var seatHistory: ListBuffer[Int] = new ListBuffer()
   var accessHistory: ListBuffer[String] = new ListBuffer()
+  var sessionKeys: ListBuffer[String] = new ListBuffer()
 
 
   def getLayout(currentAccess: String): String = {
