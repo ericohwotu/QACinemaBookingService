@@ -36,7 +36,6 @@ function getTimes(){
 }
 
 window.onload = function(){
-
     popDates();
 }
 
@@ -98,4 +97,16 @@ function getTotal(){
 
     if(total>0)enableSeats()
     else disableSeats()
+}
+
+function submitBookings(){
+    let xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function () {
+        if (this.readyState == 4 && this.status == 200) {
+            console.log(this.response);
+        }
+    };
+    xhttp.open("POST", "http://" + host + ":9000/submit?date=" +
+        getSelectedText("days") + "&time=" + getSelectedText("times"), true);
+    xhttp.send();
 }

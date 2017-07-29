@@ -73,71 +73,71 @@ class MongoDbController @Inject()(val reactiveMongoApi: ReactiveMongoApi) extend
     moviesCol.flatMap(_.insert(movie))
   }
 
-  //temporary
+  def getSeatsBySlots(name: String, date: String, time: String): Option[List[Seat]] = {
 
-  def getSeatsBySlots(key: String, name: String, date: String, time: String): Option[String] = {
-
-    val agg = moviesCol.map{_.aggregate(Match(Json.obj("name"->name)),
-      List(UnwindField("dateSlots"),
-        Match(Json.obj("dateSlots.name" -> date)),
-        UnwindField("dateSlots.timeSlots"),
-        Match(Json.obj("dateSlots.timeSlots.name"-> time)),
-        Group(JsString("$_id"))(
-          "name" -> First(JsString("$name")),
-          "dateSlots"-> First(JsString("$dateSlots")))))
-      }
+    val agg = moviesCol.map {
+      _.aggregate(Match(Json.obj("name" -> name)),
+        List(UnwindField("dateSlots"),
+          Match(Json.obj("dateSlots.name" -> date)),
+          UnwindField("dateSlots.timeSlots"),
+          Match(Json.obj("dateSlots.timeSlots.name" -> time)),
+          Group(JsString("$_id"))(
+            "name" -> First(JsString("$name")),
+            "dateSlots" -> First(JsString("$dateSlots")))))
+    }
 
     Await.result(agg, Duration.Inf) match {
       case aggregateResult =>
-          val futureResult = Await.result(aggregateResult,Duration.Inf)
-          val jsonResult = futureResult.firstBatch.head.value
-          val movieName = Json.toJson(jsonResult.get("name")).as[String]
-          val timeSlot = (Json.toJson(jsonResult) \ "dateSlots" \ "timeSlots" ).validate[TimeSlot]
-          val seats = (Json.toJson(jsonResult) \ "dateSlots" \ "timeSlots" \ "seats" ).validate[List[Seat]]
-          val dateSlotName = (Json.toJson(jsonResult) \ "dateSlots" \ "name" ).as[String]
-
-          seats match {
-            case success: JsSuccess[List[Seat]] =>
-              Some(getJsonString(success.value, key))
-            case error: JsError => println(JsError.toJson(error).toString())
-              None
-          }
-      }
-  }
-
-  //==================================== SEAT SELECTION AND BOOKING =================================================//
-  def bookSeat(seat: Seat) = {
-    isSeatInDb(seat.id) match {
-      case false =>
-        println("seat is not in database")
-        seatsCol.flatMap(_.insert(seat))
-      case true =>
-        println("seat is in database")
-        seatsCol.map {
-          _.findAndRemove(Json.obj("id" -> seat.id, "author" -> seat.author))
+        val futureResult = Await.result(aggregateResult, Duration.Inf)
+        val jsonResult = futureResult.firstBatch.head.value
+        val seats = (Json.toJson(jsonResult) \ "dateSlots" \ "timeSlots" \ "seats").validate[List[Seat]]
+        seats match {
+          case success: JsSuccess[List[Seat]] =>
+            Some(success.value)
+          case error: JsError => println(JsError.toJson(error).toString())
+            None
         }
     }
   }
 
-  def submitBooking(key: String) = {
-    seatsCol.map {
-      _.findAndUpdate(Json.obj("author" -> key), Json.obj("booked" -> true))
+  //==================================== SEAT SELECTION AND BOOKING =================================================//
+  def bookSeat(name: String, date: String, time: String, seat: Seat) = {
+
+    val dateIndex = DateSlot.getIndex(date)
+    val timeIndex = TimeSlot.getIndex(time)
+    val queryString = s"dateSlots.$dateIndex.timeSlots.$timeIndex.seats.${seat.id - 1}.author"
+
+    def bookHelper(author: String) = moviesCol.map {
+      _.update(Json.obj("name" -> name),
+        Json.obj("$set" -> Json.obj(s"$queryString" -> author)))
     }
+
+    val seats = getSeatsBySlots(name, date, time).get
+    val reqSeats = seats.filter(_.id == seat.id)
+
+    doesSeatExist(reqSeats, seat) match {
+      case false => None
+      case true => toBook(reqSeats.head, seat) match {
+        case true => bookHelper(seat.author)
+        case false => bookHelper("")
+      }
+    }
+
   }
 
-  def isSeatInDb(id: Long): Boolean = {
-    val cursor: Future[Cursor[Seat]] = seatsCol.map {
-      _.find(Json.obj("id" -> id))
-        .cursor[Seat](ReadPreference.primary)
-    }
-
-    val list: Future[List[Seat]] = cursor.flatMap(_.collect[List]())
-
-    Await.result(list, Duration.Inf) match {
+  def doesSeatExist(checkSeats: List[Seat], seat: Seat): Boolean = {
+    checkSeats match {
       case x if x.isEmpty => false
-      case _ => true
+      case x if x.head.author == "" || x.head.author == seat.author => true
+      case _ => false
     }
   }
+
+  def toBook(checkSeat: Seat, seat: Seat): Boolean = checkSeat.author match {
+    case "" => true
+    case seat.author => false
+  }
+
 
   def getSeats(key: String): String = {
     val cursor: Future[Cursor[Seat]] = seatsCol.map {
@@ -162,11 +162,26 @@ class MongoDbController @Inject()(val reactiveMongoApi: ReactiveMongoApi) extend
       case _ =>
         val bookedBy = tempSeats.head.author == key
         val newStr = "{\"seatid\":" + tempSeats.head.id + "," +
-          "\"available\": \"" + !tempSeats.head.booked + "\", " +
+          "\"available\": \"" + (tempSeats.head.author == "") + "\", " +
           "\"bookedBy\": \"" + bookedBy + "\"},"
         getJsonHelper(tempSeats.tail)(jsonString + newStr)
     }
 
     getJsonHelper(seats)("[")
+  }
+
+  //============================================= Bookings ===============================================/
+  def submitBooking(key: String, name: String, date: String, time: String) = {
+    val dateIndex = DateSlot.getIndex(date)
+    val timeIndex = TimeSlot.getIndex(time)
+    val findString = s"dateSlots.$dateIndex.timeSlots.$timeIndex.seats.author"
+    val queryString = "dateSlots." + dateIndex + ".timeSlots." + timeIndex + ".seats.booked"
+    println("*"*50)
+    println("submitting")
+    println("*"*50)
+    moviesCol.map {
+      _.update(Json.obj("name" -> name, findString -> key),
+        Json.obj("$set" -> Json.obj(s"$queryString" -> true)), multi = true)
+    }
   }
 }

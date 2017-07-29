@@ -18,9 +18,9 @@ class JsonApiController @Inject()(val mongoDbController: MongoDbController) exte
     jsonApiHelper(key, request) match {
       case "Unauthorised" => Unauthorized("Sorry you are not authorised")
       case bookingKey =>
-        mongoDbController.getSeatsBySlots(bookingKey, movieNameHelper(name, request), date, time) match {
+        mongoDbController.getSeatsBySlots(movieNameHelper(name, request), date, time) match {
           case None => BadRequest("No Seats Available")
-          case jsonResult => Ok(Json.parse(jsonResult.get))
+          case jsonResult => Ok(Json.parse(mongoDbController.getJsonString(jsonResult.get, bookingKey)))
         }
     }
   }
@@ -32,24 +32,26 @@ class JsonApiController @Inject()(val mongoDbController: MongoDbController) exte
   //    }
   //  }
 
-  def bookSeat(id: Int, key: Option[String]) = Action { implicit request: Request[AnyContent] =>
-    val movieName = request.session.get("movieName").getOrElse("None")
+  def bookSeat(id: Int, key: Option[String], name: Option[String], date: String, time: String) = Action { implicit request: Request[AnyContent] =>
+    val movieName = request.session.get("movieName").getOrElse(name.getOrElse("None"))
     jsonApiHelper(key, request) match {
       case "Unauthorised" => Unauthorized("Sorry you are not authorised")
       case bookingKey =>
-        mongoDbController.bookSeat(Seat(id, bookingKey, false, Seat.getExpiryDate))
+        mongoDbController.bookSeat(movieName, date, time, Seat(id, bookingKey, false, Seat.getExpiryDate))
         Ok(Json.parse(SeatGenerator.bookSeats(id, bookingKey)))
     }
   }
 
-  def submitBooking(key: Option[String]): Action[AnyContent] = Action { request: Request[AnyContent] =>
-    jsonApiHelper(key, request) match {
-      case "Unauthorised" => Unauthorized("Sorry you are not authorised")
-      case bookingKey =>
-        mongoDbController.submitBooking(bookingKey)
-        Ok("Submitting")
+  def submitBooking(key: Option[String], name: Option[String], date: String, time: String): Action[AnyContent] =
+    Action { request: Request[AnyContent] =>
+      val movieName = request.session.get("movieName").getOrElse(name.getOrElse("None"))
+      jsonApiHelper(key, request) match {
+        case "Unauthorised" => Unauthorized("Sorry you are not authorised")
+        case bookingKey =>
+          mongoDbController.submitBooking(bookingKey,movieName,date,time)
+          Ok("Submitting")
+      }
     }
-  }
 
   def jsonApiHelper(key: Option[String], request: Request[AnyContent]): String = {
     request.session.get("sessionKey").getOrElse("") match {

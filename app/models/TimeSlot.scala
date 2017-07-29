@@ -14,4 +14,6 @@ object TimeSlot{
     }
     getSlotsHelper(timeSlotNames)(List())
   }
+
+  val getIndex = (x: String) => timeSlotNames.indexOf(x)
 }

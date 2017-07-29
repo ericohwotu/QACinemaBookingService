@@ -33,4 +33,6 @@ object DateSlot{
     }
     getSlotsHelper(dateSlotNames)(List())
   }
+
+  val getIndex = (x: String) => dateSlotNames.indexOf(x)
 }
