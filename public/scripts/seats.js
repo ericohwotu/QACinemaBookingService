@@ -8,14 +8,6 @@ window.onload = function () {
 
 
 function selectSeat(seatId) {
-    //prevent submission of form
-
-    // console.log(e.target.id.replace("seat-",""));
-    // console.log(e.target.parentElement)
-    //
-    // let seatId = e.target.id.replace("seat-","");
-
-    //get an ajax call to book the seat
     let xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = function () {
         if (this.readyState == 4 && this.status == 200) {
@@ -25,6 +17,25 @@ function selectSeat(seatId) {
     xhttp.open("POST", "http://" + host + ":9000/seats/json?id=" + seatId
         + "&date=" + getSelectedText("days") + "&time=" + getSelectedText("times"), true);
     xhttp.send();
+
+}
+
+function isSeatLimitReached(){
+    let bookedCount = document.getElementsByClassName("booked").length
+
+    return bookedCount >= getTicketCount()
+}
+
+function getTicketCount(){
+    let vAdult = document.getElementById("vip-adult").value;
+    let vStudent = document.getElementById("vip-student").value;
+    let vChild = document.getElementById("vip-child").value;
+
+    let sAdult = document.getElementById("standard-adult").value;
+    let sStudent = document.getElementById("standard-student").value;
+    let sChild = document.getElementById("standard-child").value;
+
+    return vAdult + vStudent + vChild + sAdult + sStudent + sChild
 }
 
 function changeSeatColor(elem, json) {
@@ -38,6 +49,8 @@ function changeSeatColor(elem, json) {
     else
         elem.classList.add("available")
 
+    if (isSeatLimitReached()) disableSeats()
+    else enableSeats()
 }
 
 function refresh() {
@@ -103,12 +116,14 @@ function disableSeats() {
     let elems = document.getElementsByClassName("fsSubmitButton");
 
     for (let i = 0; i < elems.length; i++) {
-        elems[i].setAttribute("disabled", "true");
-        elems[i].classList.remove("available");
-        elems[i].classList.add("unavailable");
+        if(!elems[i].classList.contains("booked")) {
+            elems[i].setAttribute("disabled", "true");
+            elems[i].classList.remove("available");
+            elems[i].classList.add("unavailable");
+        }
     }
 
     clearInterval(callback);
-    refresh();
+    if(!isSeatLimitReached())refresh();
 }
 

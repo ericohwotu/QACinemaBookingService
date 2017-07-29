@@ -109,4 +109,7 @@ function submitBookings(){
     xhttp.open("POST", "http://" + host + ":9000/submit?date=" +
         getSelectedText("days") + "&time=" + getSelectedText("times"), true);
     xhttp.send();
+
+    alert("Booking has been made, you will now be redirected to the home page")
+    window.location.href = "http://www.facebook.com"
 }
