@@ -10,6 +10,7 @@ import reactivemongo.play.json.collection._
 import reactivemongo.play.json.collection.JSONCollection
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import models._
+import org.joda.time.{DateTime, DateTimeZone}
 import reactivemongo.play.json._
 import reactivemongo.api._
 import play.api.libs.json._
@@ -69,6 +70,17 @@ class MongoDbController @Inject()(val reactiveMongoApi: ReactiveMongoApi) extend
     }
   }
 
+//  def getMoviesInDb: List[Movie] = {
+//    val cursor: Future[Cursor[Movie]] = moviesCol.map {
+//      _.find(Json.obj())
+//        .cursor[Movie](ReadPreference.primary)
+//    }
+//
+//    val movies: Future[List[Movie]] = cursor.flatMap(_.collect[List]())
+//
+//    Await.result(movies, Duration.Inf)
+//  }
+
   def addMovie2Db(movie: Movie) = {
     moviesCol.flatMap(_.insert(movie))
   }
@@ -97,7 +109,7 @@ class MongoDbController @Inject()(val reactiveMongoApi: ReactiveMongoApi) extend
     }
   }
 
-  def getSeatsHelper(firstBatch: List[JsObject]): Option[List[Seat]]={
+  def getSeatsHelper(firstBatch: List[JsObject]): Option[List[Seat]] = {
     val jsonResult = firstBatch.head.value
     val seats = (Json.toJson(jsonResult) \ "dateSlots" \ "timeSlots" \ "seats").validate[List[Seat]]
 
@@ -114,13 +126,15 @@ class MongoDbController @Inject()(val reactiveMongoApi: ReactiveMongoApi) extend
 
     val dateIndex = DateSlot.getIndex(date)
     val timeIndex = TimeSlot.getIndex(time)
-    val queryString = s"dateSlots.$dateIndex.timeSlots.$timeIndex.seats.${seat.id - 1}.author"
+    val setAuthor = s"dateSlots.$dateIndex.timeSlots.$timeIndex.seats.${seat.id - 1}.author"
+    val setExpiry = s"dateSlots.$dateIndex.timeSlots.$timeIndex.seats.${seat.id - 1}.expiry"
     val seats = getSeatsBySlots(name, date, time).get
     val reqSeats = seats.filter(_.id == seat.id)
 
     def bookHelper(author: String) = moviesCol.map {
       _.update(Json.obj("name" -> name),
-        Json.obj("$set" -> Json.obj(s"$queryString" -> author)))
+        Json.obj("$set" -> Json.obj(s"$setAuthor" -> author,
+          s"$setExpiry" -> Seat.getExpiryDate)))
     }
 
     doesSeatExist(reqSeats, seat) match {
@@ -159,6 +173,7 @@ class MongoDbController @Inject()(val reactiveMongoApi: ReactiveMongoApi) extend
           "\"bookedBy\": \"" + bookedBy + "\"},"
         getJsonHelper(tempSeats.tail)(jsonString + newStr)
     }
+
     getJsonHelper(seats)("[")
   }
 
@@ -174,9 +189,9 @@ class MongoDbController @Inject()(val reactiveMongoApi: ReactiveMongoApi) extend
     def submitHelper(position: Long): String = position match {
       case 0 => "done"
       case _ => Await.result(moviesCol.map {
-          _.update(Json.obj("name" -> name, findAuthor -> key, findBooked -> false),
-            Json.obj("$set" -> Json.obj(s"$updateString" -> true)), multi = true)
-        },Duration.Inf)
+        _.update(Json.obj("name" -> name, findAuthor -> key, findBooked -> false),
+          Json.obj("$set" -> Json.obj(s"$updateString" -> true)), multi = true)
+      }, Duration.Inf)
 
         submitHelper(position - 1)
     }
@@ -184,11 +199,35 @@ class MongoDbController @Inject()(val reactiveMongoApi: ReactiveMongoApi) extend
     getSeatsBySlots(name, date, time).fold {} {
       seats =>
         val count = seats.filter(seat => seat.author == key && !seat.booked).length
-        submitHelper(count+1)
+        submitHelper(count + 1)
     }
 
   }
 
   //=============================================== Unbook Seats =============================//
+
+//  def unbookRunner = {
+//    getMoviesInDb().foreach { movie =>
+//      movie.dateSlots.zipWithIndex.foreach { case (dateSlot, dateIndex) =>
+//        dateSlot.timeSlots.zipWithIndex.foreach { case (timeSlot, timeIndex) =>
+//          timeSlot.seats.zipWithIndex.filter {
+//            case (seat, seatIndex) =>
+//              seat.expiry > 0 && seat.expiry < DateTime.now(DateTimeZone.UTC).getMillis
+//          }.foreach { case (seat, seatIndex) =>
+//            moviesCol.map {
+//              col =>
+//                val updateExpiry = s"dateSlots.$dateIndex.timeSlots.$timeIndex.seats.$seatIndex.expiry"
+//                val updateAuthor = s"dateSlots.$dateIndex.timeSlots.$timeIndex.seats.$seatIndex.author"
+//                val updater = col.update(Json.obj("name" -> movie.name),
+//                  Json.obj(updateExpiry -> 0, updateAuthor -> ""))
+//                Await.result(updater, Duration.Inf)
+//                println(s"dateSlot: ${dateSlot.name} timeSlot: ${timeSlot.name} seat: ${seat.id}")
+//            }
+//          }
+//        }
+//      }
+//    }
+//  }
+
 
 }

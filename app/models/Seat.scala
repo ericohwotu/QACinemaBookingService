@@ -5,7 +5,7 @@ import java.util.Calendar
 import org.joda.time.{DateTime, DateTimeZone}
 import play.api.libs.json.Json
 
-case class Seat(id: Long, author: String, booked: Boolean, expirey: Long)
+case class Seat(id: Long, author: String, booked: Boolean, expiry: Long)
 
 
 object Seat{
@@ -14,7 +14,7 @@ object Seat{
 
   val firstSeat = 1
   val maxSeats = 201
-  val durationMillis = 600000 //duration in milliseconds
+  val durationMillis = 60000 //duration in milliseconds
 
   def getExpiryDate: Long = {
     DateTime.now(DateTimeZone.UTC).getMillis + durationMillis
