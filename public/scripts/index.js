@@ -4,15 +4,25 @@ let hours = getTimes();
 
 function getDays(){
 
-    let date = new Date();
-    let today = date.getDate();
-    let month = date.getMonth();
-    let year = date.getYear()
     let dates = [];
     let months = ["jan","feb","mar","apr","may","jun","jul","aug","sep","oct","nov","dec"];
 
-    for (let i=0; i<7; i++)
-        dates[i] = (i + today) + " " + months[month].toUpperCase() + " " + (year + 1900);
+    for (let i=0; i<7; i++) {
+        let date = new Date();
+        date.setDate(date.getDate() + i)
+        let today = date.getDate();
+        let month = date.getMonth();
+        let year = date.getYear();
+        if(date.getDate()=== new Date().getDate() && date.getHours() > 21)
+            dates[i];
+        else
+            dates[i] = today + " " + months[month].toUpperCase() + " " + (year + 1900);
+    }
+
+    if(!dates[0])
+        dates.shift();
+
+    console.log(dates);
 
     return dates
 }
@@ -21,9 +31,13 @@ function getTimes(){
     let date = new Date();
     let timeNow = date.getHours();
     let times = new Array(7);
+    let start = 0;
 
-    for (let i = 0; i<7; i++){
-        times[i] = new Array(8)
+    if (days.length==6)
+        start = 1;
+
+    for (let i = start; i<7; i++){
+        times[i] = new Array(8);
         for (let j=0; j<24; j += 3){
             if(i == 0 && j < timeNow)
                 times[i][j] = 0;
@@ -31,6 +45,12 @@ function getTimes(){
                 times[i][j] = j + ":00";
         }
     }
+
+    if(!times[0])
+        times.shift();
+
+    console.log(times);
+
 
     return times;
 }
@@ -45,9 +65,9 @@ function popDates(){
         let opt = document.createElement("option");
         opt.value = i;
         opt.innerHTML = days[i];
-        console.log(days[i]);
         daysOptions.appendChild(opt);
     }
+    popTimes(0)
 }
 
 function popTimes(day){
@@ -61,10 +81,10 @@ function popTimes(day){
             let opt = document.createElement("option");
             opt.value = i;
             opt.innerHTML = hours[day][i];
-            console.log(days[i]);
             timesOptions.appendChild(opt);
         }
     }
+    enableScreens();
 }
 
 function enableScreens(){
@@ -95,8 +115,8 @@ function getTotal(){
 
     document.getElementById("total-field").value = vAdult + vStudent + vChild + sAdult + sChild + sStudent;
 
-    if(total>0)enableSeats()
-    else disableSeats()
+    if(isSeatLimitReached())disableSeats()
+    else enableSeats()
 }
 
 function submitBookings(){

@@ -22,18 +22,18 @@ function selectSeat(seatId) {
 
 function isSeatLimitReached(){
     let bookedCount = document.getElementsByClassName("booked").length
-
+    console.log(getTicketCount())
     return bookedCount >= getTicketCount()
 }
 
 function getTicketCount(){
-    let vAdult = document.getElementById("vip-adult").value;
-    let vStudent = document.getElementById("vip-student").value;
-    let vChild = document.getElementById("vip-child").value;
+    let vAdult = +document.getElementById("vip-adult").value;
+    let vStudent = +document.getElementById("vip-student").value;
+    let vChild = +document.getElementById("vip-child").value;
 
-    let sAdult = document.getElementById("standard-adult").value;
-    let sStudent = document.getElementById("standard-student").value;
-    let sChild = document.getElementById("standard-child").value;
+    let sAdult = +document.getElementById("standard-adult").value;
+    let sStudent = +document.getElementById("standard-student").value;
+    let sChild = +document.getElementById("standard-child").value;
 
     return vAdult + vStudent + vChild + sAdult + sStudent + sChild
 }
@@ -105,8 +105,8 @@ function enableSeats() {
 
     for (let i = 0; i < elems.length; i++) {
         elems[i].removeAttribute("disabled");
-        elems[i].classList.remove("unavailable");
-        elems[i].classList.add("available");
+        // elems[i].classList.remove("unavailable");
+        // elems[i].classList.add("available");
     }
 
     refresh();
