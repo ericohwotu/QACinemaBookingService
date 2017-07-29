@@ -4,7 +4,7 @@
 
 # Home page
 GET     /                           controllers.Application.index(name: String ?= "Sample Booking")
-GET     /seats/json                 controllers.JsonApiController.getAllSeats(key: Option[String] ?= None)
+GET     /seats/json                 controllers.JsonApiController.getAllSeats(key: Option[String] ?= None, name: Option[String] ?= None, date: String, time: String)
 GET     /key/json                   controllers.MongoDbController.getKey
 
 # seats selection handler
