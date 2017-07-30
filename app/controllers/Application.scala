@@ -33,7 +33,7 @@ class Application @Inject()(implicit val messagesApi: MessagesApi, val mongoDbCo
 
   def index(name: String) = Action { request: Request[AnyContent] =>
     //create movie database
-    mongoDbController.isMovieInDb(name) match{
+    mongoDbController.isMovieInDb(name) match {
       case true =>
         checkDbHelper
         None
@@ -42,11 +42,7 @@ class Application @Inject()(implicit val messagesApi: MessagesApi, val mongoDbCo
         mongoDbController.addMovie2Db(Movie.generateMovie(name))
     }
 
-    //session and result
-    request.session.get("sessionKey").getOrElse("") match {
-      case "" => homePage(name,request).withSession("sessionKey" -> SessionHelper.getSessionKey(),"movieName"->name)
-      case _ =>  homePage(name,request).withSession("movieName"->name)
-    }
+    homePage(name,request).withSession("sessionKey" -> SessionHelper.getSessionKey(),"movieName"->name)
   }
 
   @Deprecated
@@ -60,9 +56,9 @@ class Application @Inject()(implicit val messagesApi: MessagesApi, val mongoDbCo
     val duration = Duration.create(Seat.checkDuration,TimeUnit.MILLISECONDS)
     val start = Duration.create(0,TimeUnit.MILLISECONDS)
     undoBooking.scheduler.schedule(start, duration){
-      println("starting the run")
+      println("[info] starting database checks")
       mongoDbController.unbookRunner
-      println("ending the run")
+      println("[info] database checks complete")
     }
   }
 

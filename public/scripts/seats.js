@@ -21,7 +21,13 @@ function selectSeat(seatId) {
 
 function isSeatLimitReached(){
     let bookedCount = document.getElementsByClassName("booked").length
-    console.log(getTicketCount())
+    let submitBooking = document.getElementById("submit-booking")
+
+    if(bookedCount != getTicketCount() || getTicketCount() == 0)
+        submitBooking.setAttribute("disabled", "true");
+    else
+        submitBooking.removeAttribute("disabled");
+
     return bookedCount >= getTicketCount()
 }
 

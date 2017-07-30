@@ -49,6 +49,9 @@ html, body{
     padding:20px;
 }
 
+#submit-booking:enabled:hover{
+    cursor: pointer;
+}
 .fill{
     width: 100% !important;
 }

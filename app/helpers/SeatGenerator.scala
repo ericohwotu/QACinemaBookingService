@@ -49,7 +49,7 @@ object SeatGenerator {
   }
 
   private def addButton(seatNo: Int, cls: String, en: String): String = {
-    "<td><input onclick=selectSeat(" + seatNo + ") " +
+    "<td><input type=button onclick=selectSeat(" + seatNo + ") " +
       "class=\"fsSubmitButton unavailable\" disabled  id=\"seat-" + seatNo + "\"></td>"
   }
 
@@ -70,7 +70,6 @@ object SeatGenerator {
         val newStr = "{\"seatid\":" + position + "," +
           "\"available\": \"false\", " +
           "\"bookedBy\": \""+ bookedBy(posForAccess) +"\"},"
-
 
         getSeatsHelper(position-1)(result+newStr)
     }

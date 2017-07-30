@@ -2,7 +2,6 @@ package controllers
 
 import javax.inject.Inject
 
-import business.SeatGenerator.seatHistory
 import helpers.SessionHelper
 import play.api.mvc._
 import play.modules.reactivemongo.{MongoController, ReactiveMongoApi, ReactiveMongoComponents, json}
@@ -16,7 +15,6 @@ import reactivemongo.api._
 import play.api.libs.json._
 import reactivemongo.api.commands.Command
 import reactivemongo.play.json.commands.JSONAggregationFramework.{Cursor => _, _}
-
 import scala.concurrent.duration.Duration
 import scala.util.parsing.json._
 import scala.concurrent.{Await, Future}
@@ -24,8 +22,10 @@ import scala.concurrent.{Await, Future}
 class MongoDbController @Inject()(val reactiveMongoApi: ReactiveMongoApi) extends Controller
   with ReactiveMongoComponents with MongoController {
 
+  @Deprecated
   def seatsCol: Future[JSONCollection] = database.map(_.collection[JSONCollection]("SeatsCollection"))
 
+  @Deprecated
   def screensCol: Future[JSONCollection] = database.map(_.collection[JSONCollection]("ScreensCollection"))
 
   def moviesCol: Future[JSONCollection] = database.map(_.collection[JSONCollection]("MoviesCollection"))
@@ -34,7 +34,7 @@ class MongoDbController @Inject()(val reactiveMongoApi: ReactiveMongoApi) extend
 
 
   //===================================API KEY FUNCTIONS===================================================//
-  def getKey: Action[AnyContent] = Action { request: Request[AnyContent] =>
+  def getKey: Action[AnyContent] = Action {
     val key = ApiKey(SessionHelper.getSessionKey(), "blank")
     apiKeyCol.flatMap(_.insert(key))
     Ok(Json.parse("{\"key\":\"" + key.key + "\",\"user\":\"" + key.user + "\"}"))
@@ -188,10 +188,10 @@ class MongoDbController @Inject()(val reactiveMongoApi: ReactiveMongoApi) extend
 
     def submitHelper(position: Long): String = position match {
       case 0 => "done"
-      case _ => Await.result(moviesCol.map {
+      case _ => Await.result(Await.result(moviesCol.map {
         _.update(Json.obj("name" -> name, findAuthor -> key, findBooked -> false),
           Json.obj("$set" -> Json.obj(s"$updateString" -> true)), multi = true)
-      }, Duration.Inf)
+      }, Duration.Inf),Duration.Inf)
 
         submitHelper(position - 1)
     }
@@ -199,6 +199,7 @@ class MongoDbController @Inject()(val reactiveMongoApi: ReactiveMongoApi) extend
     getSeatsBySlots(name, date, time).fold {} {
       seats =>
         val count = seats.filter(seat => seat.author == key && !seat.booked).length
+        //println(s"[info] count is {$count} seat auhor is {$key} while name of movie is {$name}")
         submitHelper(count + 1)
     }
 
