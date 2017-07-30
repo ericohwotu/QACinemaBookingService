@@ -13,7 +13,7 @@ object DateSlot{
   val dateRange = 7
   val months = List("JAN","FEB","MAR","APR","MAY","JUN","JUL","AUG","SEP","NOV","DEC")
 
-  val dateSlotNames: List[String] = {
+  def dateSlotNames: List[String] = {
     def getNamesHelper(position: Int)(result: List[String]): List[String] = position match {
       case 0 => result
       case _ =>

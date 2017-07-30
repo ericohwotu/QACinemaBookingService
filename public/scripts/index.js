@@ -134,5 +134,5 @@ function submitBookings(){
     xhttp.send();
 
     alert("Booking has been made, you will now be redirected to the home page")
-    //window.location.href = "http://www.facebook.com"
+    window.location.href = "http://www.facebook.com"
 }
