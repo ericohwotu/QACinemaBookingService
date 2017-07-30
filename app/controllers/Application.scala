@@ -58,7 +58,8 @@ class Application @Inject()(implicit val messagesApi: MessagesApi, val mongoDbCo
 
   def checkDbHelper: Unit ={
     val duration = Duration.create(Seat.checkDuration,TimeUnit.MILLISECONDS)
-    undoBooking.scheduler.schedule(duration, duration){
+    val start = Duration.create(0,TimeUnit.MILLISECONDS)
+    undoBooking.scheduler.schedule(start, duration){
       println("starting the run")
       mongoDbController.unbookRunner
       println("ending the run")

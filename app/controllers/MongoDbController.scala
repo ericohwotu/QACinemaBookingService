@@ -208,8 +208,10 @@ class MongoDbController @Inject()(val reactiveMongoApi: ReactiveMongoApi) extend
 
   def unbookRunner = {
     getMoviesInDb.foreach { movie =>
+      dateSlotUpdater(movie)
       movie.dateSlots.zipWithIndex.foreach { case (dateSlot, dateIndex) =>
         dateSlot.timeSlots.zipWithIndex.foreach { case (timeSlot, timeIndex) =>
+
           timeSlot.seats.zipWithIndex.filter {
             case (seat, seatIndex) =>
               seat.expiry > 0 && seat.expiry < DateTime.now(DateTimeZone.UTC).getMillis
@@ -232,5 +234,23 @@ class MongoDbController @Inject()(val reactiveMongoApi: ReactiveMongoApi) extend
     }
   }
 
+  def dateSlotUpdater(movie: Movie) = {
+    val uniqueList = DateSlot.getDateSlots.filter{ newSlot => movie.dateSlots.forall{
+        dateSlot => dateSlot.name != newSlot.name
+      }
+    }
+
+    def dateSlotHelper(dateSlots: List[DateSlot]): Unit = dateSlots.isEmpty match {
+      case true => None
+      case false =>
+        Await.result(Await.result(moviesCol.map {
+          _.update(Json.obj("name"->movie.name),
+            Json.obj("$push" -> Json.obj("dateSlots" ->
+              Json.obj("$each"->List(dateSlots.head),"$position"->0))))
+        },Duration.Inf),Duration.Inf)
+        dateSlotHelper(dateSlots.tail)
+    }
+    dateSlotHelper(uniqueList.reverse)
+  }
 
 }
