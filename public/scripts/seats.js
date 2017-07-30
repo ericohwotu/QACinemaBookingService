@@ -17,7 +17,6 @@ function selectSeat(seatId) {
     xhttp.open("POST", "http://" + host + ":9000/seats/json?id=" + seatId
         + "&date=" + getSelectedText("days") + "&time=" + getSelectedText("times"), true);
     xhttp.send();
-
 }
 
 function isSeatLimitReached(){

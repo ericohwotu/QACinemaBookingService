@@ -84,6 +84,7 @@ function popTimes(day){
             timesOptions.appendChild(opt);
         }
     }
+    if(getTicketCount()>0)refresh()
     enableScreens();
 }
 
@@ -91,6 +92,7 @@ function enableScreens(){
     let screens = document.getElementById("screens");
     screens.removeAttribute("disabled");
     screens.classList.remove("disabled");
+    if(getTicketCount()>0)refresh()
 }
 
 function enableTable(){

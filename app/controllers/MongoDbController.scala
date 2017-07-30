@@ -70,16 +70,16 @@ class MongoDbController @Inject()(val reactiveMongoApi: ReactiveMongoApi) extend
     }
   }
 
-//  def getMoviesInDb: List[Movie] = {
-//    val cursor: Future[Cursor[Movie]] = moviesCol.map {
-//      _.find(Json.obj())
-//        .cursor[Movie](ReadPreference.primary)
-//    }
-//
-//    val movies: Future[List[Movie]] = cursor.flatMap(_.collect[List]())
-//
-//    Await.result(movies, Duration.Inf)
-//  }
+  def getMoviesInDb: List[Movie] = {
+    val cursor: Future[Cursor[Movie]] = moviesCol.map {
+      _.find(Json.obj())
+        .cursor[Movie](ReadPreference.primary)
+    }
+
+    val movies: Future[List[Movie]] = cursor.flatMap(_.collect[List]())
+
+    Await.result(movies, Duration.Inf)
+  }
 
   def addMovie2Db(movie: Movie) = {
     moviesCol.flatMap(_.insert(movie))
@@ -206,28 +206,31 @@ class MongoDbController @Inject()(val reactiveMongoApi: ReactiveMongoApi) extend
 
   //=============================================== Unbook Seats =============================//
 
-//  def unbookRunner = {
-//    getMoviesInDb().foreach { movie =>
-//      movie.dateSlots.zipWithIndex.foreach { case (dateSlot, dateIndex) =>
-//        dateSlot.timeSlots.zipWithIndex.foreach { case (timeSlot, timeIndex) =>
-//          timeSlot.seats.zipWithIndex.filter {
-//            case (seat, seatIndex) =>
-//              seat.expiry > 0 && seat.expiry < DateTime.now(DateTimeZone.UTC).getMillis
-//          }.foreach { case (seat, seatIndex) =>
-//            moviesCol.map {
-//              col =>
-//                val updateExpiry = s"dateSlots.$dateIndex.timeSlots.$timeIndex.seats.$seatIndex.expiry"
-//                val updateAuthor = s"dateSlots.$dateIndex.timeSlots.$timeIndex.seats.$seatIndex.author"
-//                val updater = col.update(Json.obj("name" -> movie.name),
-//                  Json.obj(updateExpiry -> 0, updateAuthor -> ""))
-//                Await.result(updater, Duration.Inf)
-//                println(s"dateSlot: ${dateSlot.name} timeSlot: ${timeSlot.name} seat: ${seat.id}")
-//            }
-//          }
-//        }
-//      }
-//    }
-//  }
+  def unbookRunner = {
+    getMoviesInDb.foreach { movie =>
+      movie.dateSlots.zipWithIndex.foreach { case (dateSlot, dateIndex) =>
+        dateSlot.timeSlots.zipWithIndex.foreach { case (timeSlot, timeIndex) =>
+          timeSlot.seats.zipWithIndex.filter {
+            case (seat, seatIndex) =>
+              seat.expiry > 0 && seat.expiry < DateTime.now(DateTimeZone.UTC).getMillis
+          }.foreach { case (seat, seatIndex) =>
+            val updateExpiry = s"dateSlots.$dateIndex.timeSlots.$timeIndex.seats.$seatIndex.expiry"
+            val updateAuthor = s"dateSlots.$dateIndex.timeSlots.$timeIndex.seats.$seatIndex.author"
+            seat.booked match {
+              case true => moviesCol.map {
+                _.update(Json.obj("name" -> movie.name),
+                  Json.obj("$set" -> Json.obj(updateExpiry -> 0)), multi = true)
+              }
+              case false => moviesCol.map {
+                _.update(Json.obj("name" -> movie.name),
+                  Json.obj("$set" -> Json.obj(updateExpiry -> 0, updateAuthor -> "")), multi = true)
+              }
+            }
+          }
+        }
+      }
+    }
+  }
 
 
 }

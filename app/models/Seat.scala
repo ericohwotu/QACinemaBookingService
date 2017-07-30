@@ -1,9 +1,8 @@
 package models
 
-import java.util.Calendar
-
 import org.joda.time.{DateTime, DateTimeZone}
 import play.api.libs.json.Json
+import com.typesafe.config.ConfigFactory
 
 case class Seat(id: Long, author: String, booked: Boolean, expiry: Long)
 
@@ -12,12 +11,14 @@ object Seat{
   implicit val seatFormat = Json.format[Seat]
 
 
+
   val firstSeat = 1
   val maxSeats = 201
-  val durationMillis = 60000 //duration in milliseconds
+  val expiryDuration = ConfigFactory.load().getLong("seat.duration.expiry") * 60000
+  val checkDuration = ConfigFactory.load().getLong("seat.duration.check") * 60000
 
   def getExpiryDate: Long = {
-    DateTime.now(DateTimeZone.UTC).getMillis + durationMillis
+    DateTime.now(DateTimeZone.UTC).getMillis + expiryDuration
   }
 
   val getSeats: List[Seat] ={
