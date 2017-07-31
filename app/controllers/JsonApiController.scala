@@ -30,7 +30,7 @@ class JsonApiController @Inject()(val mongoDbController: MongoDbController) exte
     jsonApiHelper(key, request) match {
       case "Unauthorised" => Unauthorized("Sorry you are not authorised")
       case bookingKey =>
-        mongoDbController.bookSeat(movieName, date, time, Seat(id, bookingKey, false, Seat.getExpiryDate))
+        mongoDbController.bookSeat(movieName, date, time, Seat(id, bookingKey, false, Seat.getExpiryDate,""))
         Ok(Json.parse(SeatGenerator.bookSeats(id, bookingKey)))
     }
   }

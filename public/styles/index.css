@@ -118,6 +118,12 @@ html, body{
     -webkit-box-shadow: 0 1px 0 rgba(255, 255, 255, 0.5) inset;
 }
 
+.empty{
+    background-color: transparent !important;
+    border-style: none !important;
+    box-shadow: none !important;
+}
+
 .booked{
     background-color: green;
     text-shadow: 1px 1px green;

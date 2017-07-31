@@ -101,6 +101,8 @@ function updateButton(json) {
         elem.classList.add("unavailable");
         elem.setAttribute("disabled", "true");
     }
+
+    if (json.type == "EMPTY")elem.classList.add("empty");
 }
 
 function enableSeats() {

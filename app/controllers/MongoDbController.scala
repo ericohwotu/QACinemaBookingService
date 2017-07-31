@@ -28,7 +28,7 @@ class MongoDbController @Inject()(val reactiveMongoApi: ReactiveMongoApi) extend
   @Deprecated
   def screensCol: Future[JSONCollection] = database.map(_.collection[JSONCollection]("ScreensCollection"))
 
-  def moviesCol: Future[JSONCollection] = database.map(_.collection[JSONCollection]("MoviesCollection"))
+  def moviesCol: Future[JSONCollection] = database.map(_.collection[JSONCollection]("MoviesCollectionCustom"))
 
   def apiKeyCol: Future[JSONCollection] = database.map(_.collection[JSONCollection]("ApiCollection"))
 
@@ -170,6 +170,7 @@ class MongoDbController @Inject()(val reactiveMongoApi: ReactiveMongoApi) extend
         val bookedBy = tempSeats.head.author == key
         val newStr = "{\"seatid\":" + tempSeats.head.id + "," +
           "\"available\": \"" + (tempSeats.head.author == "") + "\", " +
+          "\"type\": \"" + tempSeats.head.kind + "\", " +
           "\"bookedBy\": \"" + bookedBy + "\"},"
         getJsonHelper(tempSeats.tail)(jsonString + newStr)
     }

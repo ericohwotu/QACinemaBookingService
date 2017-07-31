@@ -4,7 +4,7 @@ import org.joda.time.{DateTime, DateTimeZone}
 import play.api.libs.json.Json
 import com.typesafe.config.ConfigFactory
 
-case class Seat(id: Long, author: String, booked: Boolean, expiry: Long)
+case class Seat(id: Long, author: String, booked: Boolean, expiry: Long, kind: String)
 
 
 object Seat{
@@ -24,7 +24,15 @@ object Seat{
   val getSeats: List[Seat] ={
     def getSeatsHelper(position: Long)(result: List[Seat]): List[Seat] = position match{
       case 201 => result
-      case _ => getSeatsHelper(position + 1)(result :+ Seat(position,"",false,0))
+      case x => x match{
+        case x if ((x - 4) % 20 == 0) || ((x + 3) % 20 == 0) =>
+          getSeatsHelper(position + 1)(result :+ Seat(position,"",false,0,"EMPTY"))
+        case x if x <= 40 => getSeatsHelper(position + 1)(result :+ Seat(position,"",false,0,"STANDARD"))
+        case x if x <= 60 => getSeatsHelper(position + 1)(result :+ Seat(position,"",false,0,"EMPTY"))
+        case x if x <= 80 => getSeatsHelper(position + 1)(result :+ Seat(position,"",false,0,"DISABLED"))
+        case x if x <= 100 => getSeatsHelper(position + 1)(result :+ Seat(position,"",false,0,"VIP"))
+        case _ => getSeatsHelper(position + 1)(result :+ Seat(position,"",false,0,"STANDARD"))
+      }
     }
     getSeatsHelper(1)(List())
   }
