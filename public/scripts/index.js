@@ -72,6 +72,8 @@ function popDates(){
 
 function popTimes(day){
     let timesOptions = document.getElementById("times");
+    let total = getStandardTicketCount() + getVipTicketCount();
+
     timesOptions.innerHTML = "";
     timesOptions.removeAttribute("disabled");
     timesOptions.classList.remove("disabled");
@@ -84,15 +86,18 @@ function popTimes(day){
             timesOptions.appendChild(opt);
         }
     }
-    if(getTicketCount()>0)refresh()
+    //if(total>0)refresh()
     enableScreens();
 }
 
 function enableScreens(){
     let screens = document.getElementById("screens");
+    let total = getStandardTicketCount() + getVipTicketCount();
+
     screens.removeAttribute("disabled");
     screens.classList.remove("disabled");
-    if(getTicketCount()>0)refresh()
+
+    //if(total>0)refresh();
     enableTable()
 }
 
@@ -117,9 +122,16 @@ function getTotal(){
     let total = vAdult + vStudent + vChild + sAdult + sChild + sStudent;
 
     document.getElementById("total-field").value = vAdult + vStudent + vChild + sAdult + sChild + sStudent;
+    console.log("getToral called")
 
-    if(isSeatLimitReached())disableSeats()
-    else enableSeats()
+    if (isVipLimitReached()) disableVip()
+    else enableVip();
+
+    if (isStandardLimitReached()) disableStandard()
+    else enableStandard();
+
+    isSeatLimitReached();
+
 }
 
 function submitBookings(){

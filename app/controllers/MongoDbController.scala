@@ -1,6 +1,6 @@
 package controllers
 
-import javax.inject.Inject
+import javax.inject.{Inject, Singleton}
 
 import helpers.SessionHelper
 import play.api.mvc._
@@ -15,6 +15,7 @@ import reactivemongo.api._
 import play.api.libs.json._
 import reactivemongo.api.commands.Command
 import reactivemongo.play.json.commands.JSONAggregationFramework.{Cursor => _, _}
+
 import scala.concurrent.duration.Duration
 import scala.util.parsing.json._
 import scala.concurrent.{Await, Future}
