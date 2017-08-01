@@ -147,7 +147,7 @@ html, body{
     background-color: orangered;
     text-shadow: 1px 1px orangered;
     border: 1px solid orangered;
-    box-shadow: 0px 1px 2px orange;
+    /*box-shadow: 0px 1px 2px orange;*/
     cursor: pointer;
 }
 
