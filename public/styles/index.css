@@ -118,9 +118,9 @@ html, body{
 
 
     width: 100%;
-    box-shadow: 0 1px 0 rgba(255, 255, 255, 0.5) inset;
-    -moz-box-shadow: 0 1px 0 rgba(255, 255, 255, 0.5) inset;
-    -webkit-box-shadow: 0 1px 0 rgba(255, 255, 255, 0.5) inset;
+    /*box-shadow: 0 1px 0 rgba(255, 255, 255, 0.5) inset;*/
+    /*-moz-box-shadow: 0 1px 0 rgba(255, 255, 255, 0.5) inset;*/
+    /*-webkit-box-shadow: 0 1px 0 rgba(255, 255, 255, 0.5) inset;*/
 }
 
 
@@ -144,15 +144,21 @@ html, body{
 }
 
 .booked{
-    background-color: orange;
-    text-shadow: 1px 1px orange;
-    border: 1px solid orange;
-    cursor: pointer;
-}
-.available{
+    background-color: orangered;
+    text-shadow: 1px 1px orangered;
+    border: 1px solid orangered;
+    box-shadow: 0px 1px 2px orange;
     cursor: pointer;
 }
 
+.available{
+    cursor: pointer;
+    box-shadow: 0px 1px 2px orange;
+}
+
+td{
+    padding: 3px;
+}
 .unavailable{
     background-color: darkgray;
     text-shadow: 1px 1px darkgray;
