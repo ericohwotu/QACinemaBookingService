@@ -18,7 +18,9 @@ import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import scala.concurrent.duration.Duration
 
 @Singleton
-class Application @Inject()(implicit val messagesApi: MessagesApi, val mongoDbController: MongoDbController) extends Controller with I18nSupport{
+class Application @Inject()(implicit val messagesApi: MessagesApi,
+                            val mongoDbController: MongoDbController
+                          ) extends Controller with I18nSupport{
 
   val undoBooking = ActorSystem("unbookingService")
 
@@ -37,10 +39,10 @@ class Application @Inject()(implicit val messagesApi: MessagesApi, val mongoDbCo
     //create movie database
     mongoDbController.isMovieInDb(name) match {
       case true =>
-        checkDbHelper
+        //checkDbHelper
         None
       case false =>
-        checkDbHelper
+        //checkDbHelper
         mongoDbController.addMovie2Db(Movie.generateMovie(name))
     }
 
