@@ -17,12 +17,14 @@ import play.api.libs.concurrent.Execution.Implicits.defaultContext
 
 import scala.concurrent.duration.Duration
 
+@Singleton
 class Application @Inject()(implicit val messagesApi: MessagesApi, val mongoDbController: MongoDbController) extends Controller with I18nSupport{
+
+  val undoBooking = ActorSystem("unbookingService")
 
   val homePage = (name: String,request: Request[AnyContent]) =>
     Ok(views.html.index(name)(DateSelector.dsForm, SeatGenerator.getLayout(request.remoteAddress)))
 
-  val undoBooking = ActorSystem("unbookingService")
 
   val seatsForm = Form[(Int, Int)](
     Forms.tuple(
@@ -61,5 +63,4 @@ class Application @Inject()(implicit val messagesApi: MessagesApi, val mongoDbCo
       println("[info] database checks complete")
     }
   }
-
 }

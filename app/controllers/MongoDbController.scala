@@ -20,6 +20,7 @@ import scala.concurrent.duration.Duration
 import scala.util.parsing.json._
 import scala.concurrent.{Await, Future}
 
+@Singleton
 class MongoDbController @Inject()(val reactiveMongoApi: ReactiveMongoApi) extends Controller
   with ReactiveMongoComponents with MongoController {
 
