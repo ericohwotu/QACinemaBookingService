@@ -46,10 +46,8 @@ function isStandardLimitReached(){
 
     let bookedCount = document.getElementsByClassName("standard booked").length;
 
-
     isSeatLimitReached()
     return bookedCount >= getStandardTicketCount()
-
 }
 
 function isVipLimitReached(){
@@ -153,6 +151,7 @@ function updateButton(json) {
     }
 
     if (json.type == "VIP")setVipButton(elem);
+    if (json.type == "DISABLED")setDisButton(elem);
 
     if (json.type == "EMPTY"){
         elem.classList.remove("standard");
@@ -166,6 +165,13 @@ function setVipButton(seat){
     seat.classList.remove("standard")
     seat.classList.remove("vip")
     seat.classList.add("vip")
+}
+
+function setDisButton(seat){
+    console.log("set dis button");
+    // seat.classList.remove("standard")
+    seat.classList.remove("dis")
+    seat.classList.add("dis")
 }
 
 function enableStandard() {

@@ -112,15 +112,11 @@ html, body{
     font-weight: bold;
 
     color: #ffffff;
-    border-radius: 5px;
-    -moz-border-radius: 5px;
-    -webkit-border-radius: 5px;
+    border-style: none;
+    border-radius: 2px;
 
 
     width: 100%;
-    /*box-shadow: 0 1px 0 rgba(255, 255, 255, 0.5) inset;*/
-    /*-moz-box-shadow: 0 1px 0 rgba(255, 255, 255, 0.5) inset;*/
-    /*-webkit-box-shadow: 0 1px 0 rgba(255, 255, 255, 0.5) inset;*/
 }
 
 
@@ -133,36 +129,36 @@ html, body{
 
 .vip{
     background-color: darkgoldenrod;
-    text-shadow: 1px 1px darkgoldenrod;
-    border: 1px solid darkgoldenrod;
+    border-style: none;
 }
+
+.standard.dis.available{
+    background-color: #FFFFE0;
+}
+
+
 
 .standard{
     background-color: lightgreen;
-    text-shadow: 1px 1px lightgreen;
-    border: 1px solid lightgreen;
 }
 
 .booked{
     background-color: orangered;
-    text-shadow: 1px 1px orangered;
-    border: 1px solid orangered;
-    /*box-shadow: 0px 1px 2px orange;*/
     cursor: pointer;
 }
 
 .available{
     cursor: pointer;
-    box-shadow: 0px 1px 2px orange;
+    box-shadow: 0px 1px 5px #87878787;
 }
 
 td{
-    padding: 3px;
+    padding: 2px;
 }
 .unavailable{
     background-color: darkgray;
-    text-shadow: 1px 1px darkgray;
-    border: 1px solid darkgray;
+    border-style: none;
+
 }
 
 #seat-area{
