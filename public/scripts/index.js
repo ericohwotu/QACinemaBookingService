@@ -122,29 +122,34 @@ function getTotal(){
     let total = vAdult + vStudent + vChild + sAdult + sChild + sStudent;
 
     document.getElementById("total-field").value = vAdult + vStudent + vChild + sAdult + sChild + sStudent;
-    console.log("getToral called")
+    console.log("getToral called");
 
-    if (isVipLimitReached()) disableVip()
+    if (isVipLimitReached()) disableVip();
     else enableVip();
 
-    if (isStandardLimitReached()) disableStandard()
+    if (isStandardLimitReached()) disableStandard();
     else enableStandard();
 
     isSeatLimitReached();
 
+    return total
+
 }
 
 function submitBookings(){
-    let xhttp = new XMLHttpRequest();
-    xhttp.onreadystatechange = function () {
-        if (this.readyState == 4 && this.status == 200) {
-            console.log(this.response);
-        }
-    };
-    xhttp.open("POST", "http://" + host + ":9000/submit?date=" +
-        getSelectedText("days") + "&time=" + getSelectedText("times"), true);
-    xhttp.send();
+    // let xhttp = new XMLHttpRequest();
+    // xhttp.onreadystatechange = function () {
+    //     if (this.readyState == 4 && this.status == 200) {
+    //         console.log(this.response);
+    //     }
+    // };
+    // // xhttp.open("POST", "http://" + host + ":9000/submit?date=" +
+    // //     getSelectedText("days") + "&time=" + getSelectedText("times"), true);
+    //
+    // //xhttp.open("GET", "http://192.168.1.198:9000/payment/token?amount=" + getTotal(), true);
+    // xhttp.send();
 
-    alert("Booking has been made, you will now be redirected to the home page")
-    window.location.href = "http://www.facebook.com"
+    alert("Booking has been made, you will now be redirected to the payment")
+    console.log(getTotal())
+    window.location.href = "/submit?amount=" + getTotal()
 }

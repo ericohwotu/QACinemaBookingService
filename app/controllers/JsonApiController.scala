@@ -32,6 +32,7 @@ class JsonApiController @Inject()(val mongoDbController: MongoDbController) exte
       case bookingKey =>
         mongoDbController.bookSeat(movieName, date, time, Seat(id, bookingKey, false, Seat.getExpiryDate,""))
         Ok(Json.parse(SeatGenerator.bookSeats(id, bookingKey)))
+          .withSession(request.session + ("date" -> date) + ("time" -> time))
     }
   }
 
