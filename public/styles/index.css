@@ -43,9 +43,15 @@ html, body{
     text-align: center;
     margin: auto;
     color: white;
+    width: 100%;
     background-color: #333333;
     border-radius: 3px;
     padding:20px;
+}
+
+tr{
+    position: relative;
+    width: 40%;
 }
 
 #submit-booking:enabled:hover{
@@ -53,6 +59,7 @@ html, body{
 }
 
 .fill{
+    padding: 10px;
     width: 100% !important;
 }
 
@@ -104,17 +111,15 @@ html, body{
     outline: none;
 }
 
-
 .fsSubmitButton
 {
-    padding: 6px 12px !important;
+    padding: 4px 8px !important;
     font-size: 8px !important;
     font-weight: bold;
 
     color: #ffffff;
     border-style: none;
     border-radius: 2px;
-
 
     width: 100%;
 }
