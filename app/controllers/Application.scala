@@ -26,8 +26,9 @@ class Application @Inject()(implicit val messagesApi: MessagesApi,
   val undoBooking = ActorSystem("unbookingService")
   val paymentUrl = ConfigFactory.load().getString("payment.server")
 
-  val paymentPopup = (amount: String) => s"<iframe id='payment-popup' src='http://192.168.1.198:9000/payment" +
-    s"/token?amount=$amount' height=200px width=200px></iframe>"
+  val hiddenMultips = (str: String) =>  str.split(",").zipWithIndex.map{
+    case (value,index) => s"<data id='data-$index'>$value</data>"
+  }
 
   val homePage = (name: String, request: Request[AnyContent]) =>
     Ok(views.html.index(name)(DateSelector.dsForm, SeatGenerator.getLayout(request.remoteAddress)))
@@ -53,12 +54,16 @@ class Application @Inject()(implicit val messagesApi: MessagesApi,
   }
 
   def toPayment(amount: String) = Action{ request: Request[AnyContent] =>
-    Redirect(paymentUrl + amount)
+    println(request.headers)
+    Redirect(paymentUrl + amount).withCookies(Cookie("time","time"))
   }
 
   def toSubmitBooking() = Action{ request: Request[AnyContent] =>
+
     val tDate = request.session.get("date").getOrElse("none")
     val tTime = request.session.get("time").getOrElse("none")
+
+    println(s"$tDate and $tTime")
     Redirect(routes.JsonApiController.submitBooking(date = tDate, time = tTime))
   }
 

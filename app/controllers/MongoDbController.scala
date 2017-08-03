@@ -202,7 +202,7 @@ class MongoDbController @Inject()(val reactiveMongoApi: ReactiveMongoApi) extend
     getSeatsBySlots(name, date, time).fold {} {
       seats =>
         val count = seats.filter(seat => seat.author == key && !seat.booked).length
-        //println(s"[info] count is {$count} seat auhor is {$key} while name of movie is {$name}")
+        println(s"[info] count is {$count} seat auhor is {$key} while name of movie is {$name}")
         submitHelper(count + 1)
     }
 

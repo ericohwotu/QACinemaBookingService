@@ -10,7 +10,8 @@ GET     /key/json                   controllers.MongoDbController.getKey
 # seats selection handler
 POST    /seats/json                 controllers.JsonApiController.bookSeat(id: Int, key: Option[String] ?= None,name: Option[String] ?= None, date: String, time: String)
 GET     /submit                     controllers.Application.toPayment(amount: String)
-POST    /bookings/confirm           controllers.JsonApiController.submitBooking(key: Option[String] ?= None,name: Option[String] ?= None, date: String, time: String)
+GET     /bookings/confirm           controllers.Application.toSubmitBooking()
+GET    /submitbooking               controllers.JsonApiController.submitBooking(key: Option[String] ?= None,name: Option[String] ?= None, date: String, time: String)
 
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.at(path="/public", file)

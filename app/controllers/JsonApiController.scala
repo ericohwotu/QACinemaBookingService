@@ -43,7 +43,7 @@ class JsonApiController @Inject()(val mongoDbController: MongoDbController) exte
         case "Unauthorised" => Unauthorized("Sorry you are not authorised")
         case bookingKey =>
           mongoDbController.submitBooking(bookingKey,movieName,date,time)
-          Ok("Submitting")
+          Redirect("http://www.facebook.com")
       }
     }
 
