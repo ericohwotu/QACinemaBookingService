@@ -21,7 +21,7 @@ import scala.util.parsing.json._
 import scala.concurrent.{Await, Future}
 
 @Singleton
-class MongoDbController @Inject()(val reactiveMongoApi: ReactiveMongoApi) extends Controller
+class ScreeningsDbController @Inject()(val reactiveMongoApi: ReactiveMongoApi) extends Controller
   with ReactiveMongoComponents with MongoController {
 
   @Deprecated

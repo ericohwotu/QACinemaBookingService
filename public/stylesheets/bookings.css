@@ -1,0 +1,203 @@
+html, body{
+    position: relative;
+    display: block;
+    background-color: #ffffff !important;
+    height: 100% !important;
+    width: 100%;
+}
+
+.album-overview{
+    margin: auto;
+    height:500px;
+    background-color: rgba(0,0,0,0.9);
+    border-radius: 1px;
+    padding-top: 15px;
+}
+
+
+.right-fragment{
+    display: block;
+    height:100%;
+    width: 100%;
+}
+
+.thin-divider{
+    width:10px !important;
+    height:10px;
+}
+.vert-divider{
+    width: 10px;
+}
+
+.album-art{
+    margin: auto;
+    height:300px;
+    width:80%;
+    background-color: rgba(0,0,0,0.6);
+    border-radius: 5px;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+.track-list{
+    text-align: center;
+    margin: auto;
+    color: white;
+    width: 100%;
+    background-color: #333333;
+    border-radius: 3px;
+    padding:20px;
+}
+
+tr{
+    position: relative;
+    width: 40%;
+}
+
+#submit-booking:enabled:hover{
+    cursor: pointer;
+}
+
+.fill{
+    padding: 10px;
+    width: 100% !important;
+}
+
+.right-fragment,.left-fragment{
+    overflow-x: auto;
+}
+
+.underline{
+    border-bottom-style: solid;
+    border-color: #ffffff;
+}
+
+.thick{
+    border-width: 4px;
+}
+
+.mid{
+    border-width: 2px;
+}
+
+.hor-divider{
+    height:5px;
+}
+
+.thin{
+    border-width: 1px;
+}
+
+.disabled{
+    background-color: #777777 !important;
+}
+
+.form-inline{
+    width: 350px;
+    margin-left: auto !important;
+    margin-right: auto !important;
+}
+
+.form-control{
+    border-radius: 1px !important;
+    background-color: #57D6C7;
+    color: white;
+}
+.navbar{
+    background-color: rgba(45,45,45,0.8);
+}
+
+.fsSubmitButton:focus{
+    outline: none;
+}
+
+.fsSubmitButton
+{
+    padding: 4px 8px !important;
+    font-size: 8px !important;
+    font-weight: bold;
+
+    color: #ffffff;
+    border-style: none;
+    border-radius: 2px;
+
+    width: 100%;
+}
+
+
+.empty{
+    background-color: transparent !important;
+    border-style: none !important;
+    box-shadow: none !important;
+    cursor: auto !important;
+}
+
+.vip{
+    background-color: darkgoldenrod;
+    border-style: none;
+}
+
+.standard.dis.available{
+    background-color: #FFFFE0;
+}
+
+
+
+.standard{
+    background-color: lightgreen;
+}
+
+#payment-popup{
+    position: fixed;
+    height: 500px;
+    width: 750px;
+    margin-left: -375px;
+    margin-top: -250px;
+    top: 50%;
+    left: 50%;
+    border-style: none;
+    border-radius: 10px;
+    box-shadow: 0 2px 5px #656565;
+}
+
+.booked{
+    background-color: orangered;
+    cursor: pointer;
+}
+
+.available{
+    cursor: pointer;
+    box-shadow: 0px 1px 5px #87878787;
+}
+
+td{
+    padding: 2px;
+}
+.unavailable{
+    background-color: darkgray;
+    border-style: none;
+
+}
+
+#seat-area{
+    overflow-x: auto;
+    overflow-y: auto;
+    margin: auto;
+    color: #CCCCCC;
+}
+
+#date-area{
+    overflow-x: auto;
+    overflow-y: auto;
+    margin: auto;
+    color: #CCCCCC;
+}
+
+thead > tr,
+tbody > tr{
+    border-style: hidden !important;
+}
+
+thead > tr{
+    text-align:center !important;
+}

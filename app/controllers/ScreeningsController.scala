@@ -19,17 +19,16 @@ import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import scala.concurrent.duration.Duration
 
 @Singleton
-class Application @Inject()(implicit val messagesApi: MessagesApi,
-                            val mongoDbController: MongoDbController
+class ScreeningsController @Inject()(implicit val messagesApi: MessagesApi,
+                                     val mongoDbController: ScreeningsDbController
                           ) extends Controller with I18nSupport{
 
-  val undoBooking = ActorSystem("unbookingService")
   val paymentUrl = ConfigFactory.load().getString("payment.server")
 
   val hiddenMultips = (str: String) =>  str.split(",").toList
 
   val homePage = (name: String, vals: List[String], request: Request[AnyContent]) =>
-    Ok(views.html.index(name, vals)(DateSelector.dsForm, SeatGenerator.getLayout(request.remoteAddress)))
+    Ok(views.html.bookings(name, vals)(DateSelector.dsForm, SeatGenerator.getLayout(request.remoteAddress)))
 
 
   val seatsForm = Form[(Int, Int)](
@@ -62,16 +61,6 @@ class Application @Inject()(implicit val messagesApi: MessagesApi,
     val tTime = request.session.get("time").getOrElse("none")
 
     println(s"$tDate and $tTime")
-    Redirect(routes.JsonApiController.submitBooking(date = tDate, time = tTime))
-  }
-
-  def checkDbHelper: Unit ={
-    val duration = Duration.create(Seat.checkDuration,TimeUnit.MILLISECONDS)
-    val start = Duration.create(0,TimeUnit.MILLISECONDS)
-    undoBooking.scheduler.schedule(start, duration){
-      println("[info] starting database checks")
-      mongoDbController.unbookRunner
-      println("[info] database checks complete")
-    }
+    Redirect(routes.ScreeningsApiController.submitBooking(date = tDate, time = tTime))
   }
 }

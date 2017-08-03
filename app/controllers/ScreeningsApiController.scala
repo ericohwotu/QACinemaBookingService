@@ -12,7 +12,7 @@ import scala.concurrent.Await
 import scala.concurrent.duration.Duration
 import scala.util.{Failure, Success}
 
-class JsonApiController @Inject()(val mongoDbController: MongoDbController) extends Controller {
+class ScreeningsApiController @Inject()(val mongoDbController: ScreeningsDbController) extends Controller {
 
   def getAllSeats(key: Option[String], name: Option[String], date: String, time: String) = Action { implicit request: Request[AnyContent] =>
     jsonApiHelper(key, request) match {

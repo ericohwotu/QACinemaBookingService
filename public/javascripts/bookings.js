@@ -151,7 +151,7 @@ function submitBookings(){
     // //xhttp.open("GET", "http://192.168.1.198:9000/payment/token?amount=" + getTotal(), true);
     // xhttp.send();
 
-    alert("Booking has been made, you will now be redirected to the payment")
-    console.log(getTotal())
-    window.location.href = "/submit?amount=" + getTotal()
+    alert("Booking has been made, you will now be redirected to the payment");
+    console.log(getTotal());
+    window.location.href = "/bookings/topayment?amount=" + getTotal()
 }

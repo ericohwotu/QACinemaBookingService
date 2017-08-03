@@ -11,7 +11,7 @@ import play.api.test.Helpers._
  * For more information, consult the wiki.
  */
 @RunWith(classOf[JUnitRunner])
-class ApplicationSpec extends Specification {
+class ScreeningsControllerTests extends Specification {
 
   "Application" should {
 
@@ -32,8 +32,6 @@ class ApplicationSpec extends Specification {
 
     "give bad request if no key is provided" in new WithApplication() {
       val getSeats = route(FakeApplication(),FakeRequest(GET,"/seats/json")).get
-
-      status(getSeats) must
     }
   }
 }

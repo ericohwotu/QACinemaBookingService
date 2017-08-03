@@ -2,16 +2,14 @@
 # This file defines all application routes (Higher priority routes first)
 # ~~~~
 
-# Home page
-GET     /                           controllers.Application.index(name: String ?= "Sample Booking", multipliers: String ?= "1,1.2,1.4")
-GET     /seats/json                 controllers.JsonApiController.getAllSeats(key: Option[String] ?= None, name: Option[String] ?= None, date: String, time: String)
-GET     /key/json                   controllers.MongoDbController.getKey
-
-# seats selection handler
-GET     /seats/json                 controllers.JsonApiController.bookSeat(id: Int, key: Option[String] ?= None,name: Option[String] ?= None, date: String, time: String)
-GET     /submit                     controllers.Application.toPayment(amount: String)
-GET     /bookings/confirm           controllers.Application.toSubmitBooking()
-GET     /submitbooking              controllers.JsonApiController.submitBooking(key: Option[String] ?= None,name: Option[String] ?= None, date: String, time: String)
+# bookings page
+GET     /bookings                   controllers.ScreeningsController.index(name: String ?= "Sample Booking", multipliers: String ?= "1,1.2,1.4")
+GET     /bookings/getseats          controllers.ScreeningsApiController.getAllSeats(key: Option[String] ?= None, name: Option[String] ?= None, date: String, time: String)
+GET     /key/getkey                 controllers.ScreeningsDbController.getKey
+POST    /bookings/bookseat          controllers.ScreeningsApiController.bookSeat(id: Int, key: Option[String] ?= None,name: Option[String] ?= None, date: String, time: String)
+GET     /bookings/topayment         controllers.ScreeningsController.toPayment(amount: String)
+GET     /bookings/confirm           controllers.ScreeningsController.toSubmitBooking()
+GET     /bookings/submit            controllers.ScreeningsApiController.submitBooking(key: Option[String] ?= None,name: Option[String] ?= None, date: String, time: String)
 
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.at(path="/public", file)
