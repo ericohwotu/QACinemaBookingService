@@ -1,4 +1,4 @@
-@(title: String)(dateForm: Form[DateSelector], content: String)(implicit messages: Messages)
+@(title: String, vals: List[String])(dateForm: Form[DateSelector], content: String)(implicit messages: Messages)
 <!--(dateForm: Form[DateSelectorForm])(implicit messages: Messages)-->
 
 <!DOCTYPE html>
@@ -30,7 +30,7 @@
             <div class="row" id="overlord">
                 <div class="left-fragment col-lg-5">
                     <div class="row" id="date-selection">
-                    @timeselector(dateForm)
+                    @timeselector(dateForm, vals)
                     </div>
 
                         <!-- ticket selection -->
@@ -53,7 +53,6 @@
             </div>
         </div>
         <br>
-
     </body>
 
 </html>

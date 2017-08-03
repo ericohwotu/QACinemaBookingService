@@ -26,12 +26,10 @@ class Application @Inject()(implicit val messagesApi: MessagesApi,
   val undoBooking = ActorSystem("unbookingService")
   val paymentUrl = ConfigFactory.load().getString("payment.server")
 
-  val hiddenMultips = (str: String) =>  str.split(",").zipWithIndex.map{
-    case (value,index) => s"<data id='data-$index'>$value</data>"
-  }
+  val hiddenMultips = (str: String) =>  str.split(",").toList
 
-  val homePage = (name: String, request: Request[AnyContent]) =>
-    Ok(views.html.index(name)(DateSelector.dsForm, SeatGenerator.getLayout(request.remoteAddress)))
+  val homePage = (name: String, vals: List[String], request: Request[AnyContent]) =>
+    Ok(views.html.index(name, vals)(DateSelector.dsForm, SeatGenerator.getLayout(request.remoteAddress)))
 
 
   val seatsForm = Form[(Int, Int)](
@@ -41,7 +39,7 @@ class Application @Inject()(implicit val messagesApi: MessagesApi,
     )
   )
 
-  def index(name: String) = Action { request: Request[AnyContent] =>
+  def index(name: String, vals: String) = Action { request: Request[AnyContent] =>
     //create movie database
     mongoDbController.isMovieInDb(name) match {
       case true =>
@@ -50,7 +48,7 @@ class Application @Inject()(implicit val messagesApi: MessagesApi,
         mongoDbController.addMovie2Db(Movie.generateMovie(name))
     }
 
-    homePage(name,request).withSession("sessionKey" -> SessionHelper.getSessionKey(),"movieName"->name)
+    homePage(name,hiddenMultips(vals),request).withSession("sessionKey" -> SessionHelper.getSessionKey(),"movieName"->name)
   }
 
   def toPayment(amount: String) = Action{ request: Request[AnyContent] =>

@@ -119,9 +119,11 @@ function getTotal(){
     let sStudent = document.getElementById("standard-student").value * 6;
     let sChild = document.getElementById("standard-child").value * 3;
 
+    let multiplier = +document.getElementById("screens").value;
+
     let total = vAdult + vStudent + vChild + sAdult + sChild + sStudent;
 
-    document.getElementById("total-field").value = vAdult + vStudent + vChild + sAdult + sChild + sStudent;
+    document.getElementById("total-field").value = total * multiplier
     console.log("getToral called");
 
     if (isVipLimitReached()) disableVip();
@@ -132,7 +134,7 @@ function getTotal(){
 
     isSeatLimitReached();
 
-    return total
+    return total * multiplier;
 
 }
 

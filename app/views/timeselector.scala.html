@@ -1,4 +1,4 @@
-@(dsForm: Form[DateSelector])(implicit messages: Messages)
+@(dsForm: Form[DateSelector], vals: List[String])(implicit messages: Messages)
 
 <div class="col-xs-12 track-list fill">
   <p>SELECT TIME
@@ -12,10 +12,10 @@
     <select disabled id="times" class="form-control disabled" onchange="enableScreens()">
         <!-- the times go here -->
     </select>
-    <select disabled id="screens" class="form-control disabled" onchange="enableTable()">
-      <option value="4">Standard</option>
-      <option value="2">3D</option>
-      <option value="1">Imax</option>
+    <select disabled id="screens" class="form-control disabled" onchange="getTotal()">
+      <option value="@vals(0)">Standard</option>
+      <option value="@vals(1)">3D</option>
+      <option value="@vals(2)">Imax</option>
     </select>
   </form>
 </div>
