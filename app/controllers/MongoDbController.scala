@@ -59,12 +59,12 @@ class MongoDbController @Inject()(val reactiveMongoApi: ReactiveMongoApi) extend
 
   //==================================== MOVIES =====================================================================//
   def isMovieInDb(movieName: String): Boolean = {
-    val cursor: Future[Cursor[Movie]] = moviesCol.map {
+    val cursor: Future[Cursor[Screening]] = moviesCol.map {
       _.find(Json.obj("name" -> movieName))
-        .cursor[Movie](ReadPreference.primary)
+        .cursor[Screening](ReadPreference.primary)
     }
 
-    val list: Future[List[Movie]] = cursor.flatMap(_.collect[List]())
+    val list: Future[List[Screening]] = cursor.flatMap(_.collect[List]())
 
     Await.result(list, Duration.Inf) match {
       case x if x.isEmpty => false
@@ -72,18 +72,18 @@ class MongoDbController @Inject()(val reactiveMongoApi: ReactiveMongoApi) extend
     }
   }
 
-  def getMoviesInDb: List[Movie] = {
-    val cursor: Future[Cursor[Movie]] = moviesCol.map {
+  def getMoviesInDb: List[Screening] = {
+    val cursor: Future[Cursor[Screening]] = moviesCol.map {
       _.find(Json.obj())
-        .cursor[Movie](ReadPreference.primary)
+        .cursor[Screening](ReadPreference.primary)
     }
 
-    val movies: Future[List[Movie]] = cursor.flatMap(_.collect[List]())
+    val movies: Future[List[Screening]] = cursor.flatMap(_.collect[List]())
 
     Await.result(movies, Duration.Inf)
   }
 
-  def addMovie2Db(movie: Movie) = {
+  def addMovie2Db(movie: Screening) = {
     moviesCol.flatMap(_.insert(movie))
   }
 
@@ -238,7 +238,7 @@ class MongoDbController @Inject()(val reactiveMongoApi: ReactiveMongoApi) extend
     }
   }
 
-  def dateSlotUpdater(movie: Movie) = {
+  def dateSlotUpdater(movie: Screening) = {
     val uniqueList = DateSlot.getDateSlots.filter{ newSlot => movie.dateSlots.forall{
         dateSlot => dateSlot.name != newSlot.name
       }

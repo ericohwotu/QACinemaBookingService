@@ -12,7 +12,7 @@ import play.api.i18n._
 import business.SeatGenerator
 import com.typesafe.config.ConfigFactory
 import helpers.SessionHelper
-import models.{DateSelector, Movie, Seat}
+import models.{DateSelector, Screening, Seat}
 import play.api.data.{Form, Forms}
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 
@@ -45,7 +45,7 @@ class Application @Inject()(implicit val messagesApi: MessagesApi,
       case true =>
         None
       case false =>
-        mongoDbController.addMovie2Db(Movie.generateMovie(name))
+        mongoDbController.addMovie2Db(Screening.generateMovie(name))
     }
 
     homePage(name,hiddenMultips(vals),request).withSession("sessionKey" -> SessionHelper.getSessionKey(),"movieName"->name)
