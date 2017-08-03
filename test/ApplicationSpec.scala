@@ -27,4 +27,13 @@ class ApplicationSpec extends Specification {
       contentAsString(home) must contain ("Your new application is ready.")
     }
   }
+
+  "JsonApiController" should {
+
+    "give bad request if no key is provided" in new WithApplication() {
+      val getSeats = route(FakeApplication(),FakeRequest(GET,"/seats/json")).get
+
+      status(getSeats) must
+    }
+  }
 }
